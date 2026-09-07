@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Admin - RSVP Management</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <style>
+      body { font-family: "Montserrat", sans-serif; background: #f5f5f5; min-height: 100vh; }
+      .admin-container { padding: 2rem; }
+      .stats-card { transition: transform 0.3s; }
+      .stats-card:hover { transform: translateY(-5px); }
+      #login-section { display: flex; align-items: center; justify-content: center; height: 100vh; }
+      #dashboard-section { display: none; }
+    </style>
+  </head>
+  <body>
+
+    <!-- Login Section -->
+    <div id="login-section">
+      <div class="card" style="width: 400px;">
+        <div class="card-content">
+          <h3 class="title has-text-centered">Admin Login</h3>
+          <div class="field">
+            <label class="label">Email</label>
+            <div class="control">
+              <input class="input" type="email" id="admin-email" placeholder="admin@email.com">
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+              <input class="input" type="password" id="admin-password" placeholder="********">
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button class="button is-primary is-fullwidth" id="btn-login">Ingresar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard-section" class="admin-container">
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <div class="is-flex is-justify-content-space-between is-align-items-center mb-5">
+            <h1 class="title">Gestión de Invitados</h1>
+            <button class="button is-danger is-light" id="btn-logout">Cerrar Sesión</button>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="columns">
+            <div class="column">
+              <div class="card stats-card has-background-info-light has-text-centered p-4">
+                <p class="heading">Total Registros</p>
+                <p class="title" id="stat-total">0</p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card stats-card has-background-success-light has-text-centered p-4">
+                <p class="heading">Confirmados</p>
+                <p class="title" id="stat-confirmed">0</p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card stats-card has-background-warning-light has-text-centered p-4">
+                <p class="heading">Total Personas</p>
+                <p class="title" id="stat-people">0</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Controls -->
+          <div class="box">
+            <div class="columns">
+              <div class="column is-8">
+                <div class="field">
+                  <div class="control has-icons-left">
+                    <input class="input" type="text" id="admin-search" placeholder="Buscar invitado por nombre...">
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-search"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-4 has-text-right">
+                <button class="button is-link" id="btn-export">Exportar CSV</button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="table is-fullwidth is-hoverable">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Asiste</th>
+                    <th>Personas</th>
+                    <th>WhatsApp</th>
+                    <th>Mensaje</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="guest-table-body">
+                  <!-- Rows loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Editar Invitado</p>
+          <button class="delete" aria-label="close" id="btn-close-edit"></button>
+        </header>
+        <section class="modal-card-body">
+          <form id="edit-form">
+            <input type="hidden" id="edit-id">
+            <div class="field">
+              <label class="label">Nombre</label>
+              <div class="control">
+                <input class="input" type="text" id="edit-nombre" required>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">¿Asistirá?</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select id="edit-asiste">
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Cantidad</label>
+              <div class="control">
+                <input class="input" type="number" id="edit-cantidad" min="1" max="10">
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">WhatsApp</label>
+              <div class="control">
+                <input class="input" type="tel" id="edit-whatsapp">
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Mensaje</label>
+              <div class="control">
+                <textarea class="textarea" id="edit-mensaje"></textarea>
+              </div>
+            </div>
+          </form>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-light" id="btn-cancel-edit">Cancelar</button>
+          <button class="button is-primary" id="btn-save-edit">Guardar Cambios</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- SDKs -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/admin.js"></script>
+  </body>
+</html>

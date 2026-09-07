@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        // 🚨 PEGA AQUÍ TU CONFIGURACIÓN DE FIREBASE 🚨
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxyP2Ub4O4dMpbTfm4FFVkFlgW20Dqeq8",
+            authDomain: "bautismo-7bc12.firebaseapp.com",
+            projectId: "bautismo-7bc12",
+            storageBucket: "bautismo-7bc12.firebasestorage.app",
+            messagingSenderId: "164355049607",
+            appId: "1:164355049607:web:ab40db2238505a51795022",
+            measurementId: "G-7G11HJSFL0"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+</head>
+<style>
+        :root {
+            --color-bg-primary: #F7FDF9; /* Creamy Mint */
+            --color-bg-secondary: #EBF5EE; /* Soft Pastel Green */
+            --color-accent-green: #A3C9A8; /* Fairy Green */
+            --color-deep-emerald: #2D6A4F; /* Forest Emerald */
+            --color-gold: #C5A059; /* Antique Gold */
+            --color-gold-light: #F1E5B4;
+            --color-pink-soft: #FCE4EC; /* Blossom Pink */
+            --color-text-main: #3A5A40; /* Dark Moss */
+            --color-text-muted: #6B8E6B;
+            --color-white: #FFFFFF;
+
+            --font-regal: 'Cinzel', serif;
+            --font-fairy: 'Dancing Script', cursive;
+            --font-body: 'Quicksand', sans-serif;
+
+            --shadow-magic: 0 10px 30px rgba(45, 106, 79, 0.1);
+            --gold-gradient: linear-gradient(45deg, #C5A059, #F1E5B4, #C5A059);
+            --nature-gradient: linear-gradient(135deg, #EBF5EE 0%, #D4E9D7 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            text-align: center;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Magic Particles Background */
+        .magic-dust {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--color-gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-particle 5s infinite ease-in-out;
+        }
+
+        @keyframes float-particle {
+            0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.7; transform: translateY(-100px) scale(1) rotate(180deg); }
+            100% { transform: translateY(-200px) scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        /* Layout Containers */
+        .page-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .view-welcome.active {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-bg-primary);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Section */
+        .hero-text {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            text-wrap: balance;
+        }
+
+        #fairy-canvas-container {
+            width: 100%;
+            height: 320px;
+            position: relative;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        .fairy-sprite {
+            width: 220px;
+            z-index: 2;
+            filter: drop-shadow(0 10px 15px rgba(45, 106, 79, 0.3));
+            animation: fairy-float 4s infinite ease-in-out;
+            pointer-events: none;
+            position: relative;
+        }
+
+        #fairy-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes fairy-float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        .title-main {
+            font-family: var(--font-regal);
+            font-size: 1.8rem;
+            color: var(--color-deep-emerald);
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .fairy-name {
+            font-family: var(--font-fairy);
+            font-size: 3.8rem;
+            margin: 1rem 0;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .special-message {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            color: var(--color-text-main);
+        }
+
+        /* Event Info Cards */
+        .event-info {
+            display: grid;
+            gap: 1.2rem;
+            margin: 3rem 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 1.5rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow-magic);
+            position: relative;
+            border: 1px solid var(--color-accent-green);
+            transition: transform 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .qr-container {
+            margin: 1.5rem auto 0;
+            width: 120px;
+            height: 120px;
+            padding: 8px;
+            background: white;
+            border: 2px solid var(--color-gold);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .qr-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .section-divider {
+            font-family: var(--font-regal);
+            color: var(--color-gold);
+            font-size: 0.9rem;
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .section-divider::before, .section-divider::after {
+            content: "";
+            height: 1px;
+            width: 40px;
+            background: var(--color-gold);
+        }
+
+        .info-label {
+            font-family: var(--font-regal);
+            font-size: 0.85rem;
+            color: var(--color-gold);
+            margin-bottom: 0.3rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--color-deep-emerald);
+        }
+
+        .btn-fairy {
+            display: inline-block;
+            background: var(--gold-gradient);
+            color: var(--color-white);
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-family: var(--font-regal);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 8px 20px rgba(197, 160, 89, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            max-width: 300px;
+            text-transform: uppercase;
+        }
+
+        .btn-fairy:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3);
+        }
+
+        /* Form Styles */
+        .form-title {
+            font-family: var(--font-fairy);
+            font-size: 2rem;
+            color: var(--color-deep-emerald);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-main);
+            padding-left: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--color-accent-green);
+            border-radius: 15px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: var(--color-white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-gold);
+        }
+
+        .attendance-options {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .option-card {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--color-accent-green);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--color-white);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .option-card.selected {
+            background: var(--color-accent-green);
+            color: var(--color-white);
+            border-color: var(--color-gold);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-magic);
+        }
+
+        .counter-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            background: var(--color-bg-secondary);
+            padding: 1rem;
+            border-radius: 15px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .counter-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--color-gold);
+            background: var(--color-white);
+            color: var(--color-gold);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .counter-btn:active {
+            background: var(--color-gold);
+            color: var(--color-white);
+        }
+
+        .counter-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            min-width: 30px;
+        }
+
+        /* Success View */
+        .success-animation {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .success-title {
+            font-family: var(--font-fairy);
+            color: var(--color-deep-emerald);
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Admin Panel */
+        .admin-login-container {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow-magic);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--color-white);
+            padding: 1rem;
+            border-radius: 15px;
+            border: 1px solid var(--color-accent-green);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--color-white);
+            border-radius: 15px;
+            box-shadow: var(--shadow-magic);
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-main);
+            padding: 1rem;
+            font-family: var(--font-regal);
+            font-size: 0.8rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--color-bg-secondary);
+        }
+
+        .status-pill {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-yes { background: #DCFCE7; color: #166534; }
+        .status-no { background: #FEE2E2; color: #991B1B; }
+
+        .admin-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .input-small {
+            padding: 0.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--color-accent-green);
+            font-family: var(--font-body);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            border: none;
+            background: var(--color-deep-emerald);
+            color: white;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+        }
+
+        .footer-links {
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+
+        .link-minimal {
+            text-decoration: underline;
+            cursor: pointer;
+            color: var(--color-text-muted);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--color-deep-emerald);
+            color: var(--color-white);
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            border: 1px solid var(--color-gold);
+            text-align: center;
+            min-width: 200px;
+            animation: toast-fade-in 0.3s forwards;
+        }
+
+        @keyframes toast-fade-in {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <div class="magic-dust" id="magicDust"></div>
+
+    <audio id="bgMusic" src="musicaBautismo.mp3" loop></audio>
+
+    <div class="page-container">
+
+        <!-- View 0: Welcome Overlay -->
+        <div id="view-welcome" class="view view-welcome active">
+            <img src="Tinker-Bell-PNG.png" class="fairy-sprite" style="width: 250px; animation: fairy-float 4s infinite ease-in-out;" alt="Hada Bienvenida">
+            <h2 class="title-main" style="margin-bottom: 2rem;">Bienvenido al Jardín Encantado</h2>
+            <button class="btn-fairy" onclick="enterKingdom()">✨ Abrir Invitación ✨</button>
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--color-text-muted); font-style: italic;">(Toca para activar la magia musical)</p>
+        </div>
+
+        <!-- View 1: Invitation -->
+        <div id="view-invitation" class="view">
+            <p class="hero-text">✨ Un día lleno de magia, amor y bendiciones ✨</p>
+
+            <div id="fairy-canvas-container">
+                <canvas id="fairy-particles"></canvas>
+                <img src="tin1.png" class="fairy-sprite" alt="Hada Mágica">
+            </div>
+            <h1 class="title-main">Mi Bautismo</h1>
+
+            <p class="special-message" style="font-style: italic; font-size: 1rem;">
+                Con la bendición de Dios, invitamos a usted(es) a celebrar este hermoso momento de nuestra hija:
+            </p>
+
+            <div class="fairy-name">Grettel</div>
+
+            <div class="event-info">
+                <!-- CEREMONIA RELIGIOSA -->
+                <div class="info-card">
+                    <div class="section-divider">CEREMONIA RELIGIOSA</div>
+                    <div style="display: grid; gap: 0.8rem; margin-bottom: 1rem;">
+                        <div>
+                            <span class="info-label">⛪ Misa</span>
+                            <span class="info-value">Parroquia "MARÍA AUXILIADORA"</span>
+                        </div>
+                        <div>
+                            <span class="info-label">📍 Ubicación</span>
+                            <span class="info-value">Zona Loreto</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-around; margin-top: 0.5rem;">
+                            <div>
+                                <span class="info-label">📅 Fecha</span>
+                                <span class="info-value">19 de Agosto</span>
+                            </div>
+                            <div>
+                                <span class="info-label">🕐 Hora</span>
+                                <span class="info-value">15:00 hrs.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="qr-container">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Parroquia+Maria+Auxiliadora+Zona+Loreto" alt="QR Misa">
+                    </div>
+                </div>
+
+                <!-- RECEPCIÓN PARTICULAR -->
+                <div class="info-card">
+                    <div class="section-divider">RECEPCIÓN PARTICULAR</div>
+                    <p class="special-message" style="margin: 0 0 1.5rem 0; font-size: 1rem;">
+                        Pasado el bautizo, les esperamos en nuestro domicilio particular.
+                    </p>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="info-label">📍 Ubicación del Domicilio</span>
+                        <span class="info-value" style="font-size: 1rem; display: block; margin-top: 0.3rem;">
+                            Coordenadas: -17.435430, -66.168119
+                        </span>
+                    </div>
+                    <div class="qr-container">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.google.com/maps?q=-17.435430,-66.168119" alt="QR Domicilio">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-fairy" onclick="showView('view-form')">✨ CONFIRMAR MI ASISTENCIA ✨</button>
+
+            <div class="footer-links">
+                <span class="link-minimal" onclick="showView('view-admin-login')">Acceso Organizadores</span>
+            </div>
+        </div>
+
+        <!-- View 2: RSVP Form -->
+        <div id="view-form" class="view">
+            <h2 class="form-title">🧚✨ ¡El mundo mágico necesita tu confirmación! ✨🧚</h2>
+
+            <form id="rsvpForm" onsubmit="handleRSVP(event)">
+                <div class="form-group">
+                    <label class="form-label">👤 Nombre completo</label>
+                    <input type="text" name="fullname" class="form-input" required placeholder="Tu nombre...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">¿Podrás acompañarnos?</label>
+                    <div class="attendance-options">
+                        <div class="option-card" onclick="selectAttendance(this, 'yes')">✨ Sí, estaré presente</div>
+                        <div class="option-card" onclick="selectAttendance(this, 'no')">🌸 No podré asistir</div>
+                    </div>
+                    <input type="hidden" name="attending" id="attendingInput" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">👥 ¿Cuántas personas asistirán?</label>
+                    <div class="counter-group">
+                        <button type="button" class="counter-btn" onclick="updateCounter(-1)">-</button>
+                        <span class="counter-value" id="guestCount">1</span>
+                        <button type="button" class="counter-btn" onclick="updateCounter(1)">+</button>
+                    </div>
+                    <input type="hidden" name="guestCount" id="guestCountInput" value="1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">👨‍👩‍👧 Nombres de acompañantes</label>
+                    <input type="text" name="companions" class="form-input" placeholder="Opcional...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">💌 Deja un mensaje especial (opcional)</label>
+                    <textarea name="message" class="form-input" rows="3" placeholder="Un deseo mágico..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-fairy" style="margin-bottom: 2rem;">🧚 CONFIRMAR ASISTENCIA ✨</button>
+                <button type="button" class="link-minimal" style="display: block; margin: 0 auto; border: none; background: none;" onclick="showView('view-invitation')">Volver a la invitación</button>
+            </form>
+        </div>
+
+        <!-- View 3: Success Message -->
+        <div id="view-success" class="view">
+            <span class="success-animation">🦋✨🌟</span>
+            <h2 class="success-title">✨ ¡Gracias por confirmar! ✨</h2>
+            <p class="special-message">
+                "Nos llena de alegría saber que compartirás este día tan mágico y especial con nosotros."
+            </p>
+            <button class="btn-fairy" onclick="showView('view-invitation')">Volver al inicio</button>
+        </div>
+
+        <!-- View 4: Admin Login -->
+        <div id="view-admin-login" class="view">
+            <h2 class="form-title">🔐 Acceso al Jardín</h2>
+            <div class="admin-login-container">
+                <div class="form-group">
+                    <label class="form-label">Contraseña Mágica</label>
+                    <input type="password" id="adminPassword" class="form-input" placeholder="••••••••">
+                </div>
+                <button class="btn-fairy" onclick="tryAdminLogin()">Entrar al Panel</button>
+                <button class="link-minimal" style="display: block; margin: 1rem auto; border: none; background: none;" onclick="showView('view-invitation')">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- View 5: Admin Dashboard -->
+        <div id="view-admin-dashboard" class="view">
+            <h2 class="form-title">🌿 Panel de Asistencia</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-total">0</span>
+                    <span class="stat-label">Invitados</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-confirmed" style="color: #166534;">0</span>
+                    <span class="stat-label">Confirmados</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-not">0</span>
+                    <span class="stat-label">No Asistirán</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-people" style="color: var(--color-gold);">0</span>
+                    <span class="stat-label">Total Personas</span>
+                </div>
+            </div>
+
+            <div class="admin-controls">
+                <input type="text" id="searchGuest" class="input-small" placeholder="Buscar invitado..." oninput="renderAdminTable()">
+                <select id="filterStatus" class="input-small" onchange="renderAdminTable()">
+                    <option value="all">Todos</option>
+                    <option value="yes">Confirmados</option>
+                    <option value="no">No asistirán</option>
+                </select>
+                <button class="btn-small" onclick="exportCSV()">Exportar CSV</button>
+            </div>
+
+            <div class="table-container">
+                <table id="guestTable">
+                    <thead>
+                        <tr>
+                            <th>Invitado</th>
+                            <th>Estado</th>
+                            <th>Acompañantes</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn-fairy" onclick="showView('view-invitation')">Cerrar Panel</button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentView = 'view-welcome';
+        let guestCount = 1;
+        let rsvps = [];
+
+        window.onload = () => {
+            createMagicDust();
+            loadRSVPs();
+        };
+
+        function createMagicDust() {
+            const container = document.getElementById('magicDust');
+            for (let i = 0; i < 60; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 5 + 2 + 'px';
+                particle.style.width = size;
+                particle.style.height = size;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function init3DFairy() {
+            const canvas = document.getElementById('fairy-particles');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            function resize() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const particles = [];
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speedX: (Math.random() - 0.5) * 1,
+                    speedY: (Math.random() - 0.5) * 1,
+                    opacity: Math.random()
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#D4AF37';
+
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+
+                    ctx.globalAlpha = p.opacity;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            currentView = viewId;
+            if (viewId === 'view-admin-dashboard') renderAdminDashboard();
+        }
+
+        function enterKingdom() {
+            const music = document.getElementById('bgMusic');
+            if (music) music.play().catch(e => console.log("Autoplay blocked"));
+            showView('view-invitation');
+            setTimeout(() => { init3DFairy(); }, 100);
+        }
+
+        function selectAttendance(el, value) {
+            document.querySelectorAll('.option-card').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('attendingInput').value = value;
+        }
+
+        function updateCounter(delta) {
+            guestCount = Math.max(1, guestCount + delta);
+            document.getElementById('guestCount').innerText = guestCount;
+            document.getElementById('guestCountInput').value = guestCount;
+        }
+
+        async function handleRSVP(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            if (!data.attending) {
+                alert('Por favor, confirma tu asistencia 🧚');
+                return;
+            }
+
+            const rsvpEntry = {
+                ...data,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                guestCount: parseInt(data.guestCount) || 1
+            };
+
+            try {
+                await db.collection('rsvps').add(rsvpEntry);
+                showView('view-success');
+                form.reset();
+                showToast('¡Confirmación enviada al reino mágico! ✨');
+            } catch (e) {
+                console.error("Error saving RSVP:", e);
+                alert('Hubo un problema mágico al guardar tu respuesta. Por favor, intenta de nuevo.');
+            }
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function tryAdminLogin() {
+            if (document.getElementById('adminPassword').value === 'hadas2026') {
+                showView('view-admin-dashboard');
+            } else {
+                showToast('La contraseña es incorrecta, noble hada. 🧚');
+            }
+        }
+
+        async function loadRSVPs() {
+            try {
+                const snapshot = await db.collection('rsvps').orderBy('timestamp', 'desc').get();
+                rsvps = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+            } catch (e) {
+                console.error("Error loading RSVPs:", e);
+                rsvps = [];
+            }
+        }
+
+        async function renderAdminDashboard() {
+            await loadRSVPs();
+            renderAdminTable();
+            updateStats();
+        }
+
+        function updateStats() {
+            const total = rsvps.length;
+            const confirmed = rsvps.filter(r => r.attending === 'yes').length;
+            const notAttending = rsvps.filter(r => r.attending === 'no').length;
+            const totalPeople = rsvps.filter(r => r.attending === 'yes').reduce((sum, r) => sum + (parseInt(r.guestCount) || 1), 0);
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-confirmed').innerText = confirmed;
+            document.getElementById('stat-not').innerText = notAttending;
+            document.getElementById('stat-people').innerText = totalPeople;
+        }
+
+        function renderAdminTable() {
+            const search = document.getElementById('searchGuest').value.toLowerCase();
+            const filter = document.getElementById('filterStatus').value;
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = '';
+            const filtered = rsvps.filter(r => {
+                const matchesSearch = r.fullname.toLowerCase().includes(search);
+                const matchesFilter = filter === 'all' || r.attending === filter;
+                return matchesSearch && matchesFilter;
+            });
+            filtered.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${r.fullname}</strong></td>
+                    <td><span class="status-pill status-${r.attending}">${r.attending === 'yes' ? 'Confirmado' : 'No Asiste'}</span></td>
+                    <td>${r.companions || '-'}</td>
+                    <td>${r.guestCount || 1}</td>
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <button onclick="editGuest('${r.id}')" style="cursor:pointer; background:none; border:none; font-size:1.2rem;" title="Editar">✏️</button>
+                            <button onclick="deleteGuest('${r.id}')" style="cursor:pointer; background:none; border:none; font-size:1.2rem;" title="Eliminar">🗑️</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function deleteGuest(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este registro de la base de datos?')) {
+                try {
+                    await db.collection('rsvps').doc(id).delete();
+                    showToast('Registro eliminado permanentemente 🧚');
+                    renderAdminDashboard();
+                } catch (e) {
+                    alert('Error al eliminar el registro.');
+                }
+            }
+        }
+
+        async function editGuest(id) {
+            const guest = rsvps.find(r => r.id === id);
+            if (!guest) return;
+
+            const newName = prompt('Nombre completo:', guest.fullname);
+            if (newName === null) return;
+
+            const newStatus = prompt('Estado (yes/no):', guest.attending);
+            if (newStatus === null) return;
+
+            const newCount = prompt('Total de personas:', guest.guestCount);
+            if (newCount === null) return;
+
+            const newCompanions = prompt('Acompañantes:', guest.companions);
+            if (newCompanions === null) return;
+
+            try {
+                await db.collection('rsvps').doc(id).update({
+                    fullname: newName,
+                    attending: newStatus === 'no' ? 'no' : 'yes',
+                    guestCount: parseInt(newCount) || 1,
+                    companions: newCompanions
+                });
+                showToast('Registro actualizado en la nube ✨');
+                renderAdminDashboard();
+            } catch (e) {
+                alert('Error al actualizar el registro.');
+            }
+        }
+
+        function exportCSV() {
+            let csv = 'Nombre,Estado,Acompanantes,Total\\n';
+            rsvps.forEach(r => { csv += `${r.fullname},${r.attending},${r.companions},${r.guestCount}\\n`; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'lista_bautismo_hadas.csv');
+            a.click();
+        }
+    </script>
+</body>
+</html>
