@@ -292,11 +292,27 @@
             width: 100%;
             max-width: 300px;
             text-transform: uppercase;
+            text-align: center;
+        }
+
+        .btn-fairy-floating {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: 0 10px 25px rgba(197, 160, 89, 0.5);
         }
 
         .btn-fairy:active {
             transform: scale(0.95);
             box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3);
+        }
+
+        .btn-fairy-floating:active {
+            transform: translateX(-50%) scale(0.95);
         }
 
         /* Form Styles */
@@ -580,7 +596,7 @@
         </div>
 
         <!-- View 1: Invitation -->
-        <div id="view-invitation" class="view">
+        <div id="view-invitation" class="view" style="padding-bottom: 100px;">
             <p class="hero-text">✨ Un día lleno de magia, amor y bendiciones ✨</p>
 
             <div id="fairy-canvas-container">
@@ -642,7 +658,7 @@
                 </div>
             </div>
 
-            <button class="btn-fairy" onclick="showView('view-form')">✨ CONFIRMAR MI ASISTENCIA ✨</button>
+            <button class="btn-fairy btn-fairy-floating" onclick="showView('view-form')">✨ CONFIRMAR MI ASISTENCIA ✨</button>
 
             <div class="footer-links">
                 <span class="link-minimal" onclick="showView('view-admin-login')">Acceso Organizadores</span>
@@ -668,7 +684,7 @@
                     <input type="hidden" name="attending" id="attendingInput" required>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="guest-counter-container" style="display: none;">
                     <label class="form-label">👥 ¿Cuántas personas asistirán?</label>
                     <div class="counter-group">
                         <button type="button" class="counter-btn" onclick="updateCounter(-1)">-</button>
@@ -678,7 +694,7 @@
                     <input type="hidden" name="guestCount" id="guestCountInput" value="1">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="companions-container" style="display: none;">
                     <label class="form-label">👨‍👩‍👧 Nombres de acompañantes</label>
                     <input type="text" name="companions" class="form-input" placeholder="Opcional...">
                 </div>
@@ -862,6 +878,12 @@
             document.querySelectorAll('.option-card').forEach(opt => opt.classList.remove('selected'));
             el.classList.add('selected');
             document.getElementById('attendingInput').value = value;
+
+            // Mostrar u ocultar el contador de personas según la respuesta
+            const counterGroup = document.getElementById('guest-counter-container');
+            if (counterGroup) {
+                counterGroup.style.display = (value === 'yes') ? 'block' : 'none';
+            }
         }
 
         function updateCounter(delta) {
@@ -984,7 +1006,7 @@
                     showToast('Registro eliminado permanentemente 🧚');
                     renderAdminDashboard();
                 } catch (e) {
-                    alert('Error al eliminar el registro.');
+                    showToast('❌ Error al eliminar el registro.');
                 }
             }
         }
@@ -1015,7 +1037,7 @@
                 showToast('Registro actualizado en la nube ✨');
                 renderAdminDashboard();
             } catch (e) {
-                alert('Error al actualizar el registro.');
+                showToast('❌ Error al actualizar el registro.');
             }
         }
 
