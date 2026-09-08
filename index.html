@@ -578,10 +578,186 @@
             transform: translateY(-20px);
             transition: all 0.3s ease;
         }
+
+        /* Magic Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .magic-modal {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow-magic);
+            border: 2px solid var(--color-gold);
+            max-width: 320px;
+            width: 85%;
+            text-align: center;
+            animation: modal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modal-pop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-family: var(--font-regal);
+            color: var(--color-deep-emerald);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+            color: var(--color-text-main);
+            font-size: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-modal {
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-confirm {
+            background: var(--color-deep-emerald);
+            color: white;
+        }
+
+        .btn-modal-cancel {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-main);
+        }
+
+        .btn-modal:active {
+            transform: scale(0.95);
+        }
+
+        /* Edit Modal Styles */
+        .edit-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2100;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .edit-modal {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow-magic);
+            border: 2px solid var(--color-gold);
+            max-width: 350px;
+            width: 85%;
+            text-align: center;
+            animation: modal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .edit-modal-title {
+            font-family: var(--font-regal);
+            color: var(--color-deep-emerald);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .edit-field {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .edit-field label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--color-gold);
+            margin-bottom: 0.3rem;
+            font-family: var(--font-regal);
+            text-transform: uppercase;
+        }
+
+        .edit-field input, .edit-field select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--color-accent-green);
+            border-radius: 12px;
+            font-family: var(--font-body);
+        }
     </style>
 </head>
 <body>
     <div id="toast-container" class="toast-container"></div>
+
+    <!-- Magic Modal -->
+    <div id="magic-modal" class="modal-overlay">
+        <div class="magic-modal">
+            <div id="modal-title" class="modal-title">Confirmación</div>
+            <div id="modal-body" class="modal-body">¿Estás seguro?</div>
+            <div class="modal-actions">
+                <button id="btn-modal-cancel" class="btn-modal btn-modal-cancel">Cancelar</button>
+                <button id="btn-modal-confirm" class="btn-modal btn-modal-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="edit-modal-overlay">
+        <div class="edit-modal">
+            <div class="edit-modal-title">Editar Invitado ✨</div>
+            <div class="edit-field">
+                <label>Nombre completo</label>
+                <input type="text" id="edit-fullname">
+            </div>
+            <div class="edit-field">
+                <label>Asistencia</label>
+                <select id="edit-attending">
+                    <option value="yes">✨ Sí, asistiré</option>
+                    <option value="no">🌸 No asistiré</option>
+                </select>
+            </div>
+            <div class="edit-field">
+                <label>Cantidad de personas</label>
+                <input type="number" id="edit-count" min="1">
+            </div>
+            <div class="edit-field">
+                <label>Acompañantes</label>
+                <input type="text" id="edit-companions">
+            </div>
+            <div class="modal-actions">
+                <button id="btn-edit-cancel" class="btn-modal btn-modal-cancel">Cancelar</button>
+                <button id="btn-edit-save" class="btn-modal btn-modal-confirm">Guardar</button>
+            </div>
+        </div>
+    </div>
+
     <div class="magic-dust" id="magicDust"></div>
 
     <audio id="bgMusic" src="musicaBautismo.mp3" loop></audio>
@@ -934,6 +1110,36 @@
             }, 3000);
         }
 
+        function showMagicModal(title, body) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('magic-modal');
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal-body').innerText = body;
+
+                modal.style.display = 'flex';
+
+                const confirmBtn = document.getElementById('btn-modal-confirm');
+                const cancelBtn = document.getElementById('btn-modal-cancel');
+
+                const handleConfirm = () => {
+                    modal.style.display = 'none';
+                    confirmBtn.removeEventListener('click', handleConfirm);
+                    cancelBtn.removeEventListener('click', handleCancel);
+                    resolve(true);
+                };
+
+                const handleCancel = () => {
+                    modal.style.display = 'none';
+                    confirmBtn.removeEventListener('click', handleConfirm);
+                    cancelBtn.removeEventListener('click', handleCancel);
+                    resolve(false);
+                };
+
+                confirmBtn.addEventListener('click', handleConfirm);
+                cancelBtn.addEventListener('click', handleCancel);
+            });
+        }
+
         function tryAdminLogin() {
             if (document.getElementById('adminPassword').value === 'hadas2026') {
                 showView('view-admin-dashboard');
@@ -1001,7 +1207,12 @@
         }
 
         async function deleteGuest(id) {
-            if (confirm('¿Estás seguro de que deseas eliminar este registro de la base de datos?')) {
+            const confirmed = await showMagicModal(
+                'Confirmar Eliminación',
+                '¿Estás seguro de que deseas eliminar este registro de la base de datos?'
+            );
+
+            if (confirmed) {
                 try {
                     await db.collection('rsvps').doc(id).delete();
                     showToast('Registro eliminado permanentemente 🧚');
@@ -1016,30 +1227,51 @@
             const guest = rsvps.find(r => r.id === id);
             if (!guest) return;
 
-            const newName = prompt('Nombre completo:', guest.fullname);
-            if (newName === null) return;
+            // Poblar el modal con los datos actuales
+            document.getElementById('edit-fullname').value = guest.fullname;
+            document.getElementById('edit-attending').value = guest.attending;
+            document.getElementById('edit-count').value = guest.guestCount;
+            document.getElementById('edit-companions').value = guest.companions || '';
 
-            const newStatus = prompt('Estado (yes/no):', guest.attending);
-            if (newStatus === null) return;
+            const modal = document.getElementById('edit-modal');
+            modal.style.display = 'flex';
 
-            const newCount = prompt('Total de personas:', guest.guestCount);
-            if (newCount === null) return;
+            // Manejar el botón de cancelar
+            const cancelBtn = document.getElementById('btn-edit-cancel');
+            const onCancel = () => {
+                modal.style.display = 'none';
+                cancelBtn.removeEventListener('click', onCancel);
+                saveBtn.removeEventListener('click', onSave);
+            };
 
-            const newCompanions = prompt('Acompañantes:', guest.companions);
-            if (newCompanions === null) return;
+            // Manejar el botón de guardar
+            const saveBtn = document.getElementById('btn-edit-save');
+            const onSave = async () => {
+                const newName = document.getElementById('edit-fullname').value;
+                const newStatus = document.getElementById('edit-attending').value;
+                const newCount = document.getElementById('edit-count').value;
+                const newCompanions = document.getElementById('edit-companions').value;
 
-            try {
-                await db.collection('rsvps').doc(id).update({
-                    fullname: newName,
-                    attending: newStatus === 'no' ? 'no' : 'yes',
-                    guestCount: parseInt(newCount) || 1,
-                    companions: newCompanions
-                });
-                showToast('Registro actualizado en la nube ✨');
-                renderAdminDashboard();
-            } catch (e) {
-                showToast('❌ Error al actualizar el registro.');
-            }
+                try {
+                    await db.collection('rsvps').doc(id).update({
+                        fullname: newName,
+                        attending: newStatus,
+                        guestCount: parseInt(newCount) || 1,
+                        companions: newCompanions
+                    });
+                    showToast('Registro actualizado en la nube ✨');
+                    renderAdminDashboard();
+                    modal.style.display = 'none';
+                } catch (e) {
+                    showToast('❌ Error al actualizar el registro.');
+                }
+
+                cancelBtn.removeEventListener('click', onCancel);
+                saveBtn.removeEventListener('click', onSave);
+            };
+
+            cancelBtn.addEventListener('click', onCancel);
+            saveBtn.addEventListener('click', onSave);
         }
 
         function exportCSV() {
