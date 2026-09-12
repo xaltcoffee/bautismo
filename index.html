@@ -25,8 +25,8 @@
 </head>
 <style>
         :root {
-            --color-bg-primary: #F7FDF9; /* Creamy Mint */
-            --color-bg-secondary: #EBF5EE; /* Soft Pastel Green */
+            --color-bg-primary: #FDFDFB; /* Ivory White */
+            --color-bg-secondary: #F7FDF9; /* Creamy Mint */
             --color-accent-green: #A3C9A8; /* Fairy Green */
             --color-deep-emerald: #2D6A4F; /* Forest Emerald */
             --color-gold: #C5A059; /* Antique Gold */
@@ -40,10 +40,11 @@
             --font-fairy: 'Dancing Script', cursive;
             --font-body: 'Quicksand', sans-serif;
 
-            --shadow-magic: 0 10px 30px rgba(45, 106, 79, 0.1);
+            --shadow-magic: 0 12px 40px rgba(45, 106, 79, 0.08);
             --gold-gradient: linear-gradient(45deg, #C5A059, #F1E5B4, #C5A059);
-            --nature-gradient: linear-gradient(135deg, #EBF5EE 0%, #D4E9D7 100%);
+            --nature-gradient: linear-gradient(135deg, #F7FDF9 0%, #EBF5EE 100%);
         }
+
 
         * {
             box-sizing: border-box;
@@ -53,7 +54,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--color-bg-primary);
+            background: radial-gradient(circle at center, #FFFFFF 0%, var(--color-bg-primary) 100%);
             color: var(--color-text-main);
             font-family: var(--font-body);
             overflow-x: hidden;
@@ -118,13 +119,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--color-bg-primary);
+            background: radial-gradient(circle at center, #FFFFFF 0%, var(--color-bg-primary) 100%);
             z-index: 100;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
+
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -199,6 +201,28 @@
             text-align: center;
         }
 
+        .photo-frame {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            border: 5px solid var(--color-gold);
+            box-shadow: var(--shadow-magic);
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1.2s ease-out;
+            background: var(--color-white);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+
         .special-message {
             font-family: var(--font-body);
             font-weight: 300;
@@ -227,10 +251,12 @@
             border: 1px solid var(--color-accent-green);
             transition: transform 0.3s ease;
             margin-bottom: 2rem;
+            overflow: hidden;
         }
 
+
         .qr-container {
-            margin: 1.5rem auto 0;
+            margin: 0 auto;
             width: 120px;
             height: 120px;
             padding: 8px;
@@ -242,6 +268,7 @@
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+
 
         .qr-container img {
             width: 100%;
@@ -346,6 +373,382 @@
         .btn-fairy-floating:active {
             transform: translateX(-50%) scale(0.95);
         }
+
+        .welcome-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--color-gold);
+            object-fit: cover;
+            vertical-align: middle;
+            animation: fairy-float 3s infinite ease-in-out;
+        }
+
+        /* Map Background Effect */
+
+        .map-bg-wrapper {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            margin: 1.5rem -1.5rem -1.5rem -1.5rem;
+            width: calc(100% + 3rem);
+            padding: 30px 0;
+            background-color: var(--color-bg-secondary);
+            border-radius: 0;
+        }
+
+        .map-bg-wrapper-reception {
+            margin-bottom: -2.5rem;
+        }
+
+        .map-bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('mapa.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.35;
+            z-index: -1;
+            animation: mapDynamicPan 20s infinite alternate ease-in-out;
+            pointer-events: none;
+            filter: saturate(0.9) brightness(1.1);
+        }
+
+
+
+
+        @keyframes mapDynamicPan {
+            0% { background-position: 0% 50%; transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { background-position: 100% 50%; transform: scale(1); }
+        }
+
+        /* Welcome Photo & Magic Scene */
+
+        .welcome-scene {
+            position: relative;
+            width: 100%;
+            height: clamp(250px, 40vh, 350px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-photo-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .welcome-photo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: clamp(200px, 60vw, 260px);
+            height: clamp(200px, 60vw, 260px);
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.4) 0%, transparent 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .welcome-photo {
+            width: clamp(160px, 50vw, 200px);
+            height: clamp(160px, 50vw, 200px);
+            border-radius: 50%;
+            border: clamp(4px, 3vw, 6px) solid var(--color-gold);
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.3), var(--shadow-magic);
+            object-fit: cover;
+            animation: fairy-float 4s infinite ease-in-out;
+            z-index: 2;
+            background: var(--color-white);
+        }
+
+        .tinkerbell-welcome {
+            position: absolute;
+            width: clamp(120px, 35vw, 180px);
+            left: 5%;
+            bottom: 5%;
+            z-index: 3;
+            animation: fairy-float 4s infinite ease-in-out;
+            pointer-events: none;
+            filter: drop-shadow(0 10px 15px rgba(45, 106, 79, 0.2));
+        }
+
+        .magic-sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--color-gold), 0 0 20px white;
+            z-index: 4;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        @keyframes sparkle-flow {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+                transform: translate(20px, -10px) scale(1);
+            }
+            100% {
+                transform: translate(120px, -40px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* --- PREMIUM RECEPTION DESIGN --- */
+
+
+
+        @keyframes sparkle-flow {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+                transform: translate(50px, -20px) scale(1);
+            }
+            100% {
+                transform: translate(150px, -50px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* --- PREMIUM RECEPTION DESIGN --- */
+
+
+        .reception-premium-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FDFBF7 100%);
+            border: 1px solid var(--color-gold-light);
+            border-radius: 30px;
+            padding: 2.5rem 1.5rem;
+            box-shadow: 0 15px 35px rgba(45, 106, 79, 0.08);
+            position: relative;
+            overflow: hidden;
+            margin: 3rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 1;
+        }
+
+        .reception-premium-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Floral Decorations */
+        .floral-decor {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            fill: var(--color-gold);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .decor-tl { top: -10px; left: -10px; transform: rotate(0deg); }
+        .decor-tr { top: -10px; right: -10px; transform: rotate(90deg); }
+        .decor-bl { bottom: -10px; left: -10px; transform: rotate(270deg); }
+        .decor-br { bottom: -10px; right: -10px; transform: rotate(180deg); }
+
+        .reception-title {
+            font-family: var(--font-regal);
+            font-size: 1.4rem;
+            color: var(--color-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease-out 0.3s;
+        }
+        .reception-premium-card.revealed .reception-title {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reception-title .divider {
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+            position: relative;
+        }
+        .reception-title .divider::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #FDFBF7;
+            padding: 0 5px;
+            font-size: 0.6rem;
+            color: var(--color-gold);
+        }
+
+        .reception-message {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--color-text-main);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.6s ease-out 0.5s;
+        }
+        .reception-premium-card.revealed .reception-message {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .location-premium-box {
+            background: var(--color-bg-secondary);
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(163, 201, 168, 0.3);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s;
+        }
+        .reception-premium-card.revealed .location-premium-box {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .location-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .location-label {
+            font-family: var(--font-regal);
+            font-size: 0.8rem;
+            color: var(--color-gold);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .location-coords {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: var(--color-deep-emerald);
+            font-weight: 600;
+        }
+
+        .qr-premium-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s;
+        }
+        .reception-premium-card.revealed .qr-premium-container {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .qr-premium-frame {
+            padding: 12px;
+            background: white;
+            border: 3px solid var(--color-gold);
+            border-radius: 20px;
+            box-shadow: var(--shadow-magic);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-premium-frame img {
+            width: 140px;
+            height: 140px;
+            display: block;
+        }
+
+        .qr-premium-frame::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 4s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .qr-hint {
+            font-size: 0.9rem;
+            color: var(--color-gold);
+            margin-top: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .qr-instruction-box {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px dashed var(--color-gold);
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            backdrop-filter: blur(5px);
+        }
+
+        .qr-instruction-text {
+            font-size: 0.9rem;
+            color: var(--color-text-main);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .qr-cta-highlight {
+            display: block;
+            margin-top: 0.6rem;
+            font-weight: 700;
+            color: var(--color-deep-emerald);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reception-premium-card,
+            .reception-title,
+            .reception-message,
+            .location-premium-box,
+            .qr-premium-container {
+                transition: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
 
         /* Form Styles */
         .form-title {
@@ -798,10 +1201,26 @@
 
         <!-- View 0: Welcome Overlay -->
         <div id="view-welcome" class="view view-welcome active">
-            <img src="Tinker-Bell-PNG.png" class="fairy-sprite" style="width: 250px; animation: fairy-float 4s infinite ease-in-out;" alt="Hada Bienvenida">
-            <h2 class="title-main" style="margin-bottom: 2rem;">Bienvenido al Jardín Encantado</h2>
+            <div class="welcome-scene" id="welcomeScene">
+                <img src="Tinker-Bell-PNG.png" class="tinkerbell-welcome" alt="Campanita">
+                <div class="welcome-photo-container">
+                    <div class="welcome-photo-glow"></div>
+                    <img src="Bautis.png" class="welcome-photo" alt="Grettel">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 0.5rem;">
+                    <img src="icontink.jpg" class="welcome-icon" alt="Tink Icon">
+                    <h2 class="title-main" style="margin: 0; font-size: clamp(1.2rem, 5vw, 1.6rem);">✨🌿 UN JARDÍN DE AMOR, UNA VIDA DE BENDICIONES 🌿✨</h2>
+                    <img src="icontink.jpg" class="welcome-icon" alt="Tink Icon">
+                </div>
+                <p style="font-family: var(--font-fairy); font-size: clamp(1.2rem, 4vw, 1.5rem); color: var(--color-deep-emerald); margin: 0; opacity: 0.9;">
+                    Te invito a celebrar conmigo el día de mi Bautismo. 🤍
+                </p>
+            </div>
+
             <button class="btn-fairy" onclick="enterKingdom()">✨ Abrir Invitación ✨</button>
-            <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--color-text-muted); font-style: italic;">(Toca para activar la magia musical)</p>
         </div>
 
         <!-- View 1: Invitation -->
@@ -817,6 +1236,11 @@
             <p class="special-message" style="font-style: italic; font-size: 1rem;">
                 Con la bendición de Dios, invitamos a usted(es) a celebrar este hermoso momento de nuestra hija:
             </p>
+
+            <div class="photo-frame">
+                <img src="Bautis.png" alt="Grettel - Mi Bautismo">
+            </div>
+
 
             <div class="fairy-name">Grettel</div>
 
@@ -836,7 +1260,7 @@
                         <div style="display: flex; justify-content: space-around; margin-top: 0.5rem;">
                             <div>
                                 <span class="info-label">📅 Fecha</span>
-                                <span class="info-value">19 de Agosto</span>
+                                <span class="info-value">sábado 19 de septiembre</span>
                             </div>
                             <div>
                                 <span class="info-label">🕐 Hora</span>
@@ -844,27 +1268,62 @@
                             </div>
                         </div>
                     </div>
-                    <div class="qr-container">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Parroquia+Maria+Auxiliadora+Zona+Loreto" alt="QR Misa">
+                    <div class="map-bg-wrapper">
+                        <div class="map-bg-layer"></div>
+                        <div class="qr-container">
+                            <a href="https://www.google.com/maps/search/Parroquia+Maria+Auxiliadora+Zona+Loreto" target="_blank" style="display: block; width: 100%; height: 100%;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Parroquia+Maria+Auxiliadora+Zona+Loreto" alt="QR Misa">
+                        </a>
+                        </div>
                     </div>
                 </div>
 
                 <!-- RECEPCIÓN PARTICULAR -->
-                <div class="info-card">
-                    <div class="section-divider">RECEPCIÓN PARTICULAR</div>
-                    <p class="special-message" style="margin: 0 0 1.5rem 0; font-size: 1rem;">
-                        Pasado el bautizo, les esperamos en nuestro domicilio particular.
-                    </p>
-                    <div style="margin-bottom: 1rem;">
-                        <span class="info-label">📍 Ubicación del Domicilio</span>
-                        <span class="info-value" style="font-size: 1rem; display: block; margin-top: 0.3rem;">
-                            Coordenadas: -17.435430, -66.168119
-                        </span>
+                <div id="reception-section" class="reception-premium-card">
+                    <svg class="floral-decor decor-tl" viewBox="0 0 100 100"><path d="M0 100 Q 20 80 50 100 T 100 100" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <svg class="floral-decor decor-tr" viewBox="0 0 100 100"><path d="M0 100 Q 20 80 50 100 T 100 100" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <svg class="floral-decor decor-bl" viewBox="0 0 100 100"><path d="M0 100 Q 20 80 50 100 T 100 100" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <svg class="floral-decor decor-br" viewBox="0 0 100 100"><path d="M0 100 Q 20 80 50 100 T 100 100" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+
+                    <div class="reception-header">
+                        <div class="reception-title">
+                            <span class="divider"></span>
+                            RECEPCIÓN PARTICULAR
+                            <span class="divider"></span>
+                        </div>
+                        <p class="reception-message">
+                            Pasado el bautizo, les esperamos en nuestro domicilio particular.
+                        </p>
                     </div>
-                    <div class="qr-container">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.google.com/maps?q=-17.435430,-66.168119" alt="QR Domicilio">
+
+                    <div class="location-premium-box">
+                        <div class="location-header">
+                            <span class="location-icon">📍</span>
+                            <span class="location-label">UBICACIÓN DEL DOMICILIO</span>
+                        </div>
+                    </div>
+
+                    <div class="qr-instruction-box">
+                        <p class="qr-instruction-text">
+                            🗺️ <strong>¡LLEGA FÁCILMENTE!</strong><br>
+                            📱 Escanea el código QR o <strong>tócalo directamente</strong> para abrir la ubicación en Google Maps.<br>
+                            <span class="qr-cta-highlight">👆 ¡HAZ CLIC EN EL QR PARA VER CÓMO LLEGAR!</span>
+                        </p>
+                    </div>
+
+                    <div class="map-bg-wrapper map-bg-wrapper-reception">
+                        <div class="map-bg-layer"></div>
+                        <div class="qr-premium-container">
+                            <a href="https://www.google.com/maps?q=-17.435430,-66.168119" target="_blank" style="text-decoration: none; display: block;">
+                                <div class="qr-premium-frame">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.google.com/maps?q=-17.435430,-66.168119" alt="QR Domicilio">
+                                </div>
+                            </a>
+                            <p class="qr-hint">👆 TOCA EL QR PARA ABRIR LA UBICACIÓN</p>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="footer-links">
@@ -923,7 +1382,9 @@
             <p class="special-message">
                 "Nos llena de alegría saber que compartirás este día tan mágico y especial con nosotros."
             </p>
+            <a href="https://www.google.com/maps?q=-17.435430,-66.168119" target="_blank" class="btn-fairy" style="margin-bottom: 1rem; text-decoration: none; display: inline-block;">📍 Ver ubicación en el mapa</a>
             <button class="btn-fairy" onclick="showView('view-invitation')">Volver al inicio</button>
+
         </div>
 
         <!-- View 4: Admin Login -->
@@ -1004,9 +1465,39 @@
         window.onload = () => {
             createMagicDust();
             loadRSVPs();
+            initWelcomeMagic();
         };
 
+        function initWelcomeMagic() {
+            const scene = document.getElementById('welcomeScene');
+            if (!scene) return;
+
+            setInterval(() => {
+                for (let i = 0; i < 3; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'magic-sparkle';
+
+                    // Randomize slightly around Tinkerbell's wand position
+                    const offsetX = 80 + Math.random() * 40;
+                    const offsetY = 120 + Math.random() * 30;
+
+                    sparkle.style.left = offsetX + 'px';
+                    sparkle.style.top = offsetY + 'px';
+
+                    // Randomize animation duration and delay
+                    const duration = 1.5 + Math.random() * 1;
+                    sparkle.style.animation = `sparkle-flow ${duration}s linear forwards`;
+
+                    scene.appendChild(sparkle);
+
+                    // Remove sparkle after animation ends
+                    setTimeout(() => sparkle.remove(), duration * 1000);
+                }
+            }, 400);
+        }
+
         function createMagicDust() {
+
             const container = document.getElementById('magicDust');
             for (let i = 0; i < 60; i++) {
                 const particle = document.createElement('div');
@@ -1322,6 +1813,25 @@
             a.setAttribute('download', 'lista_bautismo_hadas.csv');
             a.click();
         }
+
+        // Reveal animations for Premium Sections
+        const observerOptions = {
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const receptionSection = document.getElementById('reception-section');
+            if (receptionSection) observer.observe(receptionSection);
+        });
     </script>
+
 </body>
 </html>
